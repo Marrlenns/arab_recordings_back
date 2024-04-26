@@ -7,4 +7,6 @@ import com.example.arab_recording.entities.User;
 
 public interface AuthService {
     void register(UserRegisterRequest userRegisterRequest);
+
+    AuthLoginResponse login(AuthLoginRequest authLoginRequest);
 }
