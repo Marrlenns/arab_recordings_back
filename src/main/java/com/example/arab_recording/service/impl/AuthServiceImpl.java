@@ -14,8 +14,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AuthenticationManager;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 import java.util.HashMap;
@@ -69,12 +75,12 @@ public class AuthServiceImpl implements AuthService {
         authLoginResponse.setEmail(user.get().getEmail());
         authLoginResponse.setId(user.get().getId());
         if (user.get().getRole().equals(Role.STUDENT))
+
             authLoginResponse.setFirstName(user.get().getStudent().getFirstName());
             authLoginResponse.setLastName(user.get().getStudent().getLastName());
         Map<String, Object> extraClaims = new HashMap<>();
 
         String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
-        authLoginResponse.setToken(token);
 
         return authLoginResponse;
     }

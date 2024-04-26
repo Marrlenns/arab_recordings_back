@@ -1,5 +1,7 @@
 package com.example.arab_recording.controller;
 
+import com.example.arab_recording.dto.AuthLoginRequest;
+import com.example.arab_recording.dto.AuthLoginResponse;
 import com.example.arab_recording.dto.UserRegisterRequest;
 import com.example.arab_recording.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -18,5 +20,10 @@ public class AuthController {
     @PostMapping("/register")
     public void register(UserRegisterRequest userRegisterRequest){
         authService.register(userRegisterRequest);
+    }
+
+    @PostMapping("/login")
+    public AuthLoginResponse login(AuthLoginRequest authLoginRequest){
+        return authService.login(authLoginRequest);
     }
 }
