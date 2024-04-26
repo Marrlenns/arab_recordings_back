@@ -18,4 +18,7 @@ public class User {
     private String email;
     private String password;
     private Role role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Student student;
 }
