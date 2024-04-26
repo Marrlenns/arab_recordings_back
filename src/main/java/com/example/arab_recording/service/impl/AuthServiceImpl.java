@@ -11,6 +11,9 @@ import com.example.arab_recording.exception.BadCredentialsException;
 import com.example.arab_recording.repositories.UserRepository;
 import com.example.arab_recording.service.AuthService;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.AuthenticationManager;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 import java.util.HashMap;
@@ -83,5 +84,21 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
 
         return authLoginResponse;
+    }
+
+    @Override
+    public User getUsernameFromToken(String token){
+
+        String[] chunks = token.substring(7).split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = null;
+        try {
+            object = (JSONObject) jsonParser.parse(decoder.decode(chunks[1]));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return userRepository.findByEmail(String.valueOf(object.get("sub"))).orElseThrow(() -> new RuntimeException("user can be null"));
     }
 }
