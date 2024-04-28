@@ -140,11 +140,19 @@
 			<artifactId>spring-boot-autoconfigure</artifactId>
 			<version>3.2.2</version>
 		</dependency>
+
+		<!-- aws-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-aws</artifactId>
 			<version>2.2.6.RELEASE</version> <!-- Версия зависимости -->
 		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.24.9</version>
+		</dependency>
+
 		<!-- mappers dependency-->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
