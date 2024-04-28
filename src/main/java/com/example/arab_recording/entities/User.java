@@ -19,4 +19,9 @@ public class User {
     private String password;
     private Role role;
     private String activationtoken;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Student student;
+
 }

@@ -4,16 +4,26 @@ import com.example.arab_recording.config.JwtService;
 import com.example.arab_recording.dto.AuthLoginRequest;
 import com.example.arab_recording.dto.AuthLoginResponse;
 import com.example.arab_recording.dto.UserRegisterRequest;
+import com.example.arab_recording.entities.Student;
 import com.example.arab_recording.entities.User;
 import com.example.arab_recording.enums.Role;
 import com.example.arab_recording.exception.BadCredentialsException;
 import com.example.arab_recording.repositories.UserRepository;
 import com.example.arab_recording.service.AuthService;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.AuthenticationManager;
+
+import java.util.*;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +43,14 @@ public class AuthServiceImpl implements AuthService {
 
         User user = new User();
         user.setEmail(userRegisterRequest.getEmail());
+        user.setRole(Role.STUDENT);
         user.setPassword(encoder.encode(userRegisterRequest.getPassword()));
+        Student student=new Student();
+        student.setFirstName(userRegisterRequest.getFirstName());
+        student.setLastName(userRegisterRequest.getLastName());
+        student.setAge(userRegisterRequest.getAge());
+        student.setUser(user);
+        user.setStudent(student);
         userRepository.save(user);
     }
 
@@ -59,12 +76,29 @@ public class AuthServiceImpl implements AuthService {
         authLoginResponse.setEmail(user.get().getEmail());
         authLoginResponse.setId(user.get().getId());
         if (user.get().getRole().equals(Role.STUDENT))
-            authLoginResponse.setName(user.get().getStudent().getName());
+
+            authLoginResponse.setFirstName(user.get().getStudent().getFirstName());
+            authLoginResponse.setLastName(user.get().getStudent().getLastName());
         Map<String, Object> extraClaims = new HashMap<>();
 
-        String token = jwtService.generateToken(extraClaims, user.get());
-        authLoginResponse.setToken(token);
+        String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
 
         return authLoginResponse;
+    }
+
+    @Override
+    public User getUsernameFromToken(String token){
+
+        String[] chunks = token.substring(7).split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = null;
+        try {
+            object = (JSONObject) jsonParser.parse(decoder.decode(chunks[1]));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return userRepository.findByEmail(String.valueOf(object.get("sub"))).orElseThrow(() -> new RuntimeException("user can be null"));
     }
 }

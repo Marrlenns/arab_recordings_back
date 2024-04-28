@@ -9,4 +9,6 @@ public interface AuthService {
     void register(UserRegisterRequest userRegisterRequest);
 
     AuthLoginResponse login(AuthLoginRequest authLoginRequest);
+
+    User getUsernameFromToken(String token);
 }
