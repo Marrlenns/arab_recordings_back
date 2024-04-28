@@ -3,7 +3,10 @@ package com.example.arab_recording.service;
 import com.example.arab_recording.enums.Correctness;
 
 public interface ExpertService {
-    static boolean assessPronunciation(Long recordedWordId, Correctness correctnessLevel) {
-        return true;
-    }
+
+     Correctness assessPronunciation(Long recordedWordId, Correctness correctnessLevel);
+
+    boolean deleteRecordedWord(Long recordedWordId);
+
+    boolean assessWord(Long recordedWordId);
 }
