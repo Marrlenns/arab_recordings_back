@@ -11,14 +11,25 @@ public class EmailSenderController {
 
     private final EmailService emailService;
 
-    @PostMapping("/verification_mail/{email}")
+    @PostMapping("/admin_verification_mail/{email}")
     public void sendMail(@PathVariable String email) {
         emailService.sendActivationEmail(email);
     }
 
-    @GetMapping("/verification_confirm")
+    @GetMapping("/admin_verification_confirm")
     public String confirm(@RequestParam String activationtoken) {
         emailService.confirm(activationtoken);
+        return "Activation confirmed successfully";
+    }
+
+    @PostMapping("/expert_verification_mail/{email}")
+    public void expertMail(@PathVariable String email) {
+        emailService.expertMail(email);
+    }
+
+    @GetMapping("/expert_verification_confirm")
+    public String expert_confirm(@RequestParam String activationtoken) {
+        emailService.expert_confirm(activationtoken);
         return "Activation confirmed successfully";
     }
 }
