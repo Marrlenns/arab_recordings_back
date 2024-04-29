@@ -17,9 +17,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/v3/api-docs/**",
                                 "/swagger-ui/**", "/swagger-ui.html",
-                                "/email/admin_verification_confirm",
+                                "/superadmin/registration/{email}/**",
                                 "/superadmin/expert_role_remove/{email}",
-                                "/email/admin_verification_mail/{email}").permitAll()
+                                "/superadmin/account_confirm").permitAll()
                 );
         return http.build();
     }
