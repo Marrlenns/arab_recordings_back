@@ -19,7 +19,9 @@ public class SecurityConfig {
                                 "/swagger-ui/**", "/swagger-ui.html",
                                 "/superadmin/registration/{email}/**",
                                 "/superadmin/expert_role_remove/{email}",
-                                "/superadmin/account_confirm").permitAll()
+                                "/superadmin/account_confirm",
+                                "/auth/password_reset/",
+                                "/auth/password_confirm").permitAll()
                 );
         return http.build();
     }
