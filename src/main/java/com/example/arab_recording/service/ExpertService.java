@@ -6,7 +6,9 @@ public interface ExpertService {
 
      Correctness assessPronunciation(Long recordedWordId, Correctness correctnessLevel);
 
-    boolean deleteRecordedWord(Long recordedWordId);
+    void deleteRecordedWord(Long recordedWordId);
 
     boolean assessWord(Long recordedWordId);
+
+    String reportPronunciation(Long recordedWordId, String reportReason);
 }
