@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder encoder;
     private AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JavaMailSender mailSender;
     @Override
     public void register(UserRegisterRequest userRegisterRequest) {
         if (userRepository.findByEmail(userRegisterRequest.getEmail()).isPresent())
@@ -51,6 +54,17 @@ public class AuthServiceImpl implements AuthService {
         student.setUser(user);
         user.setStudent(student);
         userRepository.save(user);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("aslan.tabaldiev@gmail.com");
+        message.setTo(userRegisterRequest.getEmail());
+        message.setSubject("Confirm registration");
+        message.setText("""
+                Click the link below to confirm your registration
+
+                http://localhost:8081/registration_confirm""");
+
+        mailSender.send(message);
     }
 
     @Override
