@@ -1,5 +1,6 @@
 package com.example.arab_recording.service;
 
+import com.example.arab_recording.dto.ReportPronunciationRequest;
 import com.example.arab_recording.enums.Correctness;
 
 public interface ExpertService {
@@ -10,5 +11,7 @@ public interface ExpertService {
 
     boolean assessWord(Long recordedWordId);
 
-    String reportPronunciation(Long recordedWordId, String reportReason);
+
+    void reportPronunciation(ReportPronunciationRequest request);
+
 }

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/expert")
@@ -41,13 +43,9 @@ public class ExpertController {
 
     }
     @PostMapping("/report")
-    public ResponseEntity<String> reportPronunciation(@RequestBody ReportPronunciationRequest request) {
-        Long recordedWordId = request.getRecordedWordId();
-        String reportReason = request.getReportReason();
+    public void reportPronunciation(@RequestBody ReportPronunciationRequest request ) {
+        expertService.reportPronunciation(request);
 
-        String reportResult = expertService.reportPronunciation(recordedWordId, reportReason);
-
-        return ResponseEntity.ok(reportResult);
     }
 }
 

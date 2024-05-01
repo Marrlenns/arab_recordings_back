@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
@@ -22,11 +24,15 @@ public class Report {
     @JoinColumn(name = "expert_id", referencedColumnName = "id")
     private User expert; // Expert who reported the pronunciation
 
-//    @ManyToOne
-//    @JoinColumn(name = "pronunciation_id", referencedColumnName = "id")
-//    private Pronunciation pronunciation;
+
 
     @Column(name = "reason")
-    private String reason;
+    private String reportReason;
+    @Column(name = "reported_date")
+    private LocalDate reportedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "recorded_word")
+    private RecordedWord recordedWord;
 
 }
