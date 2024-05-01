@@ -14,6 +14,9 @@ public class Expert {
     private Long id;
     private String username;
     private Integer assessed_words;
+    private String email;
+    private String password;
+
 
 
 
