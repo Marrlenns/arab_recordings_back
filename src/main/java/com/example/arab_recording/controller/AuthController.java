@@ -28,6 +28,12 @@ public class AuthController {
         return authService.login(authLoginRequest);
     }
 
+    @GetMapping("/registration_confirm")
+    public String registration_confirm(@RequestParam String activationtoken) {
+        authService.registration_confirm(activationtoken);
+        return "Your account was successfully activated";
+    }
+
     @PostMapping("/password_reset/{email}")
     public String password_reset(@PathVariable String email) {
         authService.password_reset(email);

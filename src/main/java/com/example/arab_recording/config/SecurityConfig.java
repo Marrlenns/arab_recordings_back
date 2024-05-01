@@ -20,8 +20,9 @@ public class SecurityConfig {
                                 "/superadmin/registration/{email}/**",
                                 "/superadmin/expert_role_remove/{email}",
                                 "/superadmin/account_confirm",
-                                "/auth/password_reset/",
-                                "/auth/password_confirm").permitAll()
+                                "/auth/password_reset/{email}",
+                                "/auth/password_confirm",
+                                "/auth/registration_confirm").permitAll()
                 );
         return http.build();
     }

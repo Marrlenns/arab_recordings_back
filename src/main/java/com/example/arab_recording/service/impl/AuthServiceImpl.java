@@ -37,8 +37,15 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final JavaMailSender mailSender;
+
+    public String generateActivationToken() {
+        return UUID.randomUUID().toString();
+    }
+
     @Override
     public void register(UserRegisterRequest userRegisterRequest) {
+        String activationtoken = generateActivationToken();
+
         if (userRepository.findByEmail(userRegisterRequest.getEmail()).isPresent())
             throw new BadCredentialsException("user with email: "+userRegisterRequest.getEmail()+" is already exist!");
 
@@ -46,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(userRegisterRequest.getEmail());
         user.setRole(Role.STUDENT);
         user.setPassword(encoder.encode(userRegisterRequest.getPassword()));
+        user.setActivationtoken(activationtoken);
         Student student=new Student();
         student.setFirstName(userRegisterRequest.getFirstName());
         student.setLastName(userRegisterRequest.getLastName());
@@ -61,9 +69,20 @@ public class AuthServiceImpl implements AuthService {
         message.setText("""
                 Click the link below to confirm your registration
 
-                http://localhost:8081/registration_confirm""");
+                http://localhost:8081/auth/registration_confirm?activationtoken=""" + activationtoken);
 
         mailSender.send(message);
+    }
+
+    @Override
+    public void registration_confirm(String activationtoken) {
+        User user = userRepository.findByActivationtoken(activationtoken);
+
+        if(user != null) {
+            user.setActivationtoken("Activated");
+
+            userRepository.save(user);
+        }
     }
 
     @Override

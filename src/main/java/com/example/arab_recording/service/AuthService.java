@@ -9,6 +9,8 @@ import com.example.arab_recording.entities.User;
 public interface AuthService {
     void register(UserRegisterRequest userRegisterRequest);
 
+    void registration_confirm(String activationtoken);
+
     AuthLoginResponse login(AuthLoginRequest authLoginRequest);
 
     void password_reset(String email);
