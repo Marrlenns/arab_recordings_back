@@ -20,6 +20,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String activationtoken;
+    private Integer code;
 
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -30,7 +30,7 @@ public class StorageController {
                 .body(resource);
     }
 
-    @DeleteMapping("/delete/{filName}")
+    @DeleteMapping("/delete/{fileName}")
     public String deleteFile(@PathVariable String fileName) {
         storageService.deleteFile(fileName);
         return "Image deleted successfully!";
