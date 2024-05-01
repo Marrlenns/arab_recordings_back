@@ -5,16 +5,13 @@ import com.example.arab_recording.enums.Correctness;
 import com.example.arab_recording.service.ExpertService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/expert")
 public class ExpertController {
-private final ExpertService expertService;
+    private final ExpertService expertService;
 
 
     @PostMapping("/checkPronunciation")
@@ -22,7 +19,8 @@ private final ExpertService expertService;
         Long recordedWordId = request.getRecordedWordId();
         Correctness correctnessLevel = request.getCorrectnessLevel();
 
-        boolean assessmentSuccessful = ExpertService.assessPronunciation(recordedWordId, correctnessLevel);
+        Correctness correctness  = expertService.assessPronunciation(recordedWordId, correctnessLevel);
+        boolean assessmentSuccessful = expertService.assessWord(recordedWordId);
 
         if (assessmentSuccessful) {
             return ResponseEntity.ok("Pronunciation assessment completed successfully.");
@@ -31,6 +29,15 @@ private final ExpertService expertService;
         }
     }
 
+    @DeleteMapping("/deleteRecordedWord/{recordedWordId}")
+    public ResponseEntity<String> deleteRecordedWord(@PathVariable Long recordedWordId) {
+        boolean deletionSuccessful = expertService.deleteRecordedWord(recordedWordId);
+        if (deletionSuccessful) {
+            return ResponseEntity.ok("Recorded word deleted successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to delete recorded word.");
+        }
 
+    }
 }
 
