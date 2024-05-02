@@ -19,7 +19,17 @@ public class SecurityConfig {
                                 "/swagger-ui/**", "/swagger-ui.html",
                                 "/superadmin/registration/{email}/**",
                                 "/superadmin/expert_role_remove/{email}",
-                                "/superadmin/account_confirm").permitAll()
+                                "/superadmin/account_confirm",
+                                "/superadmin/add_word/**",
+                                "/auth/password_reset/{email}",
+                                "/auth/password_confirm",
+                                "/auth/registration_confirm",
+                                "/expert/{id}",
+                                "/expert/report",
+                                "/expert/deleteRecordedWord/{recorderWordId}",
+                                "/file/upload/**",
+                                "/file/delete/{fileName}",
+                                "/file/download/{fileName}").permitAll()
                 );
         return http.build();
     }
