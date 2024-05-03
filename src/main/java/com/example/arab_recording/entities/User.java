@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
@@ -21,6 +23,7 @@ public class User {
     private Role role;
     private String activationtoken;
     private Integer code;
+    private LocalDateTime code_expiration;
 
 
     @OneToOne(cascade = CascadeType.ALL)
