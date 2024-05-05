@@ -1,6 +1,8 @@
 package com.example.arab_recording.service;
 
 import com.example.arab_recording.dto.ReportPronunciationRequest;
+import com.example.arab_recording.dto.SettingsRequest;
+import com.example.arab_recording.entities.ExpertSettings;
 import com.example.arab_recording.enums.Correctness;
 
 public interface ExpertService {
@@ -14,4 +16,7 @@ public interface ExpertService {
 
     void reportPronunciation(ReportPronunciationRequest request);
 
+    ExpertSettings getExpertSettings();
+
+    void updateExpertSettings(SettingsRequest request);
 }

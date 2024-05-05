@@ -1,10 +1,13 @@
 package com.example.arab_recording.service.impl;
 
 import com.example.arab_recording.dto.ReportPronunciationRequest;
+import com.example.arab_recording.dto.SettingsRequest;
+import com.example.arab_recording.entities.ExpertSettings;
 import com.example.arab_recording.entities.RecordedWord;
 import com.example.arab_recording.entities.Report;
 import com.example.arab_recording.enums.Correctness;
 import com.example.arab_recording.repositories.ExpertRepository;
+import com.example.arab_recording.repositories.ExpertSettingsRepository;
 import com.example.arab_recording.repositories.RecordedWordRepository;
 import com.example.arab_recording.repositories.ReportRepository;
 import com.example.arab_recording.service.ExpertService;
@@ -12,7 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
 
 @Service
 @AllArgsConstructor
@@ -20,6 +23,7 @@ public class ExpertServiceImpl implements ExpertService {
     private final RecordedWordRepository recordedWordRepository;
     private final ReportRepository reportRepository;
     private final ExpertRepository expertRepository;
+    private final ExpertSettingsRepository expertSettingsRepository;
 
 
     @Override
@@ -60,7 +64,26 @@ public class ExpertServiceImpl implements ExpertService {
         reportRepository.save(report);
     }
 
+    @Override
+    public ExpertSettings getExpertSettings() {
+        return expertSettingsRepository.findById(1L)
+                .orElseThrow(() -> new EntityNotFoundException("Expert settings not found"));
     }
+
+    @Override
+    public void updateExpertSettings(SettingsRequest request) {
+            ExpertSettings settings = expertSettingsRepository.findById(1L)
+                    .orElse(new ExpertSettings());
+
+            settings.setPlaybackMode(request.getPlaybackMode());
+            settings.setLoopedModePauseDuration(request.getLoopedModePauseDuration());
+            settings.setLanguage(request.getLanguage());
+
+            expertSettingsRepository.save(settings);
+
+    }
+
+}
 
 
 
