@@ -15,6 +15,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.UUID;
 
@@ -57,6 +59,10 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
     @Override
     public void account_registration(String email, Role role) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiration = now.plusDays(1);
+        String expirationString = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(expiration);
+
         Random random = new Random();
         String password = String.valueOf(random.nextInt(90000000) + 10000000);
         String activationtoken = generateActivationToken();
@@ -78,7 +84,7 @@ public class SuperAdminServiceImpl implements SuperAdminService {
         message.setText("Your email: " + email + "\n" +
                         "Your password: " + password + "\n" +
                         "Click to the link to login into your account: " +
-                        "http://localhost:8081/superadmin/account_confirm?activationtoken=" + activationtoken);
+                        "http://localhost:8081/superadmin/account_confirm?activationtoken=" + activationtoken + "&expiration=" + expirationString);
 
         mailSender.send(message);
     }
@@ -86,11 +92,20 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
 
     @Override
-    public void account_confirm(String activationtoken) {
+    public void account_confirm(String activationtoken, LocalDateTime expiration) {
         User user = userRepository.findByActivationtoken(activationtoken);
 
-        if(user != null) {
-            user.setActivationtoken("Active");
+        if(user == null) {
+            throw new BadCredentialsException("User is not found");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if(now.isAfter(expiration)) {
+            throw new RuntimeException("The link is expired");
+        }
+        else {
+            user.setActivationtoken("Activated");
 
             userRepository.save(user);
         }
