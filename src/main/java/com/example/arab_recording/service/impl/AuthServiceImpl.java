@@ -51,9 +51,9 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(Role.STUDENT);
         user.setPassword(encoder.encode(userRegisterRequest.getPassword()));
         user.setActivationtoken(activationtoken);
+
         Student student=new Student();
-        student.setFirstName(userRegisterRequest.getFirstName());
-        student.setLastName(userRegisterRequest.getLastName());
+        student.setNickName(userRegisterRequest.getFirstName());
         student.setAge(userRegisterRequest.getAge());
         student.setUser(user);
         user.setStudent(student);
@@ -159,12 +159,19 @@ public class AuthServiceImpl implements AuthService {
         authLoginResponse.setEmail(user.get().getEmail());
         authLoginResponse.setId(user.get().getId());
         if (user.get().getRole().equals(Role.STUDENT)) {
-            authLoginResponse.setFirstName(user.get().getStudent().getFirstName());
-            authLoginResponse.setLastName(user.get().getStudent().getLastName());
-        }
-        Map<String, Object> extraClaims = new HashMap<>();
 
+            authLoginResponse.setNickName(user.get().getStudent().getNickName());
+        }
+        else if(user.get().getRole().equals(Role.EXPERT)){
+            authLoginResponse.setNickName(user.get().getExpert().getNickName());
+        }
+        else{
+            authLoginResponse.setNickName(user.get().getAdmin().getNickName());
+        }
+      
+        Map<String, Object> extraClaims = new HashMap<>();
         String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
+        authLoginResponse.setToken(token);
 
         return authLoginResponse;
     }
