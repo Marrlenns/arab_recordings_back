@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -100,20 +101,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void password_reset(String email) {
+        LocalDateTime expirationTime = LocalDateTime.now().plusHours(24);
         Random random = new Random();
-        Integer reset_code = random.nextInt(9000) + 1000;
+        Integer resetcode = random.nextInt(9000) + 1000;
+
+        User user = userRepository.findUserByEmail(email);
+        if(user == null) {
+            throw new BadCredentialsException("User is not found");
+        }
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
         message.setTo(email);
         message.setSubject("Password reset code");
-        message.setText("Your password reset code: " + reset_code + "\n\n" +
+        message.setText("Your password reset code: " + resetcode + "\n\n" +
                         "This code will expire in 24 hours");
 
         mailSender.send(message);
 
-        User user = userRepository.findUserByEmail(email);
-        user.setCode(reset_code);
+        user.setCode(resetcode);
+        user.setCode_expiration(expirationTime);
 
         userRepository.save(user);
     }
@@ -121,29 +128,38 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void password_confirm(NewPasswordRequest newPasswordRequest, Integer code) {
         User user = userRepository.findByCode(code);
-        if(user != null) {
-            if(user.getCode().equals(code)) {
-                if(newPasswordRequest.getNew_password().equals(newPasswordRequest.getNew_password_confirm())) {
-                    user.setPassword(newPasswordRequest.getNew_password());
-                }
-                else {
-                    throw new BadCredentialsException("Your password is wrong");
-                }
-            }
-            else {
-                throw new BadCredentialsException("Your code is wrong");
-            }
+
+        if (user == null) {
+            throw new BadCredentialsException("User is not found");
         }
-        else {
-            throw new BadCredentialsException("User not found");
+
+        if (!user.getCode().equals(code)) {
+            throw new BadCredentialsException("Code is wrong");
         }
+
+        LocalDateTime codeExpiration = user.getCode_expiration();
+        if (LocalDateTime.now().isAfter(codeExpiration)) {
+            throw new BadCredentialsException("Code has expired");
+        }
+
+        if (!newPasswordRequest.getNew_password().equals(newPasswordRequest.getNew_password_confirm())) {
+            throw new BadCredentialsException("Passwords do not match");
+        }
+
+        user.setPassword(newPasswordRequest.getNew_password_confirm());
+        user.setCode(null);
+        user.setCode_expiration(null);
+
+        userRepository.save(user);
     }
 
-    private AuthLoginResponse convertToResponse(Optional<User> user) {
+    @Override
+    public AuthLoginResponse convertToResponse(Optional<User> user) {
         AuthLoginResponse authLoginResponse = new AuthLoginResponse();
         authLoginResponse.setEmail(user.get().getEmail());
         authLoginResponse.setId(user.get().getId());
         if (user.get().getRole().equals(Role.STUDENT)) {
+
             authLoginResponse.setNickName(user.get().getStudent().getNickName());
         }
         else if(user.get().getRole().equals(Role.EXPERT)){
@@ -152,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
         else{
             authLoginResponse.setNickName(user.get().getAdmin().getNickName());
         }
-
+      
         Map<String, Object> extraClaims = new HashMap<>();
         String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
         authLoginResponse.setToken(token);

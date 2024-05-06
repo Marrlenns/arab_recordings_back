@@ -6,6 +6,8 @@ import com.example.arab_recording.service.SuperAdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/superadmin")
@@ -19,8 +21,8 @@ public class SuperAdminController {
     }
 
     @GetMapping("/account_confirm")
-    public String account_confirm(@RequestParam String activationtoken) {
-        superAdminService.account_confirm(activationtoken);
+    public String account_confirm(@RequestParam String activationtoken, @RequestParam LocalDateTime expiration) {
+        superAdminService.account_confirm(activationtoken, expiration);
         return "You are on the login page";
     }
 
