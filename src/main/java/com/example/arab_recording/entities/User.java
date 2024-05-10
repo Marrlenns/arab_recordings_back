@@ -29,4 +29,9 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Student student;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Expert expert;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Admin admin;
 }
