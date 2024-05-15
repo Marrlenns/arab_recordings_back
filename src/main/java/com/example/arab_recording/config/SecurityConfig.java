@@ -29,7 +29,8 @@ public class SecurityConfig {
                                 "/expert/deleteRecordedWord/{recorderWordId}",
                                 "/file/upload/**",
                                 "/file/delete/{fileName}",
-                                "/file/download/{fileName}").permitAll()
+                                "/file/download/{fileName}",
+                                "/audio/**").permitAll()
                 );
         return http.build();
     }
