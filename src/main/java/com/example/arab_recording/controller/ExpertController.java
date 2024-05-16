@@ -2,6 +2,8 @@ package com.example.arab_recording.controller;
 
 import com.example.arab_recording.dto.PronunciationCheckRequest;
 import com.example.arab_recording.dto.ReportPronunciationRequest;
+import com.example.arab_recording.dto.SettingsRequest;
+import com.example.arab_recording.entities.ExpertSettings;
 import com.example.arab_recording.enums.Correctness;
 import com.example.arab_recording.service.ExpertService;
 import lombok.AllArgsConstructor;
@@ -47,5 +49,14 @@ public class ExpertController {
         expertService.reportPronunciation(request);
 
     }
+    @GetMapping("/settings")
+    public ExpertSettings getExpertSettings() {
+        return expertService.getExpertSettings();
+    }
+    @PutMapping("/update")
+    public void updateExpertSettings(@RequestBody SettingsRequest request) {
+        expertService.updateExpertSettings(request);
+    }
+
 }
 
