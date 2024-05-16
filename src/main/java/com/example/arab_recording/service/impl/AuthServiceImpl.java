@@ -19,7 +19,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -83,23 +82,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthLoginResponse login(AuthLoginRequest authLoginRequest) {
-        Optional<User> user = userRepository.findByEmail(authLoginRequest.getEmail());
-        if (user.isEmpty())
-            throw new BadCredentialsException("user not found");
-
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authLoginRequest.getEmail(),authLoginRequest.getPassword()));
-
-        }catch (org.springframework.security.authentication.BadCredentialsException e){
-            throw new BadCredentialsException("user not found");
-        }
-
-
-        return convertToResponse(user);
-    }
-
-    @Override
     public void password_reset(String email) {
         LocalDateTime expirationTime = LocalDateTime.now().plusHours(24);
         Random random = new Random();
@@ -154,12 +136,28 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public AuthLoginResponse login(AuthLoginRequest authLoginRequest) {
+        Optional<User> user = userRepository.findByEmail(authLoginRequest.getEmail());
+        if (user.isEmpty())
+            throw new BadCredentialsException("user not found");
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authLoginRequest.getEmail(),authLoginRequest.getPassword()));
+
+        }catch (org.springframework.security.authentication.BadCredentialsException e){
+            throw new BadCredentialsException("user not found");
+        }
+
+
+        return convertToResponse(user);
+    }
+
     public AuthLoginResponse convertToResponse(Optional<User> user) {
         AuthLoginResponse authLoginResponse = new AuthLoginResponse();
         authLoginResponse.setEmail(user.get().getEmail());
         authLoginResponse.setId(user.get().getId());
-        if (user.get().getRole().equals(Role.STUDENT)) {
 
+        if (user.get().getRole().equals(Role.STUDENT)) {
             authLoginResponse.setNickName(user.get().getStudent().getNickName());
         }
         else if(user.get().getRole().equals(Role.EXPERT)){
@@ -170,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
         }
       
         Map<String, Object> extraClaims = new HashMap<>();
-        String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
+        String token = jwtService.generateToken(extraClaims, user.get());
         authLoginResponse.setToken(token);
 
         return authLoginResponse;

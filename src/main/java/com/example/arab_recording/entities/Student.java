@@ -21,9 +21,13 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private int wordsCount;
-    private int monthRecord;
+    private Integer wordsSpoken;
+    private Integer monthRecord;
 
-    @OneToOne(mappedBy = "student")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AudioFile> audioFiles;
 }
