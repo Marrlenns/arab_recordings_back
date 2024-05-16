@@ -35,7 +35,7 @@ public class User implements UserDetails{
     private LocalDateTime code_expiration;
 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Student student;
 
     @OneToOne(cascade = CascadeType.ALL)
