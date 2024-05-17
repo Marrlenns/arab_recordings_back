@@ -22,7 +22,6 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private Integer wordsSpoken;
     private Integer monthRecord;
 
     @OneToOne(mappedBy = "student")

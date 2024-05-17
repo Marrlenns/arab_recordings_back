@@ -17,20 +17,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/v3/api-docs/**",
                                 "/swagger-ui/**", "/swagger-ui.html",
-                                "/superadmin/registration/{email}/**",
+                                "/superadmin/registration/{email}/",
                                 "/superadmin/expert_role_remove/{email}",
                                 "/superadmin/account_confirm",
-                                "/superadmin/add_word/**",
+                                "/superadmin/add_word/",
                                 "/auth/password_reset/{email}",
                                 "/auth/password_confirm",
                                 "/auth/registration_confirm",
                                 "/expert/{id}",
                                 "/expert/report",
                                 "/expert/deleteRecordedWord/{recorderWordId}",
-                                "/file/upload/**",
+                                "/file/upload/",
                                 "/file/delete/{fileName}",
                                 "/file/download/{fileName}",
-                                "/audio/**").permitAll()
+                                "/audio/","/student/**").permitAll()
                 );
         return http.build();
     }

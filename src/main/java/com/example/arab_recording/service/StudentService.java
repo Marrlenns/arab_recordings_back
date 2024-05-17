@@ -1,7 +1,13 @@
 package com.example.arab_recording.service;
 
-public interface StudentService {
-    int getWordsSpoken(String email);
+import com.example.arab_recording.entities.Audio;
+import com.example.arab_recording.entities.Student;
 
-    void incrementWordsSpoken(String email);
+import java.util.List;
+import java.util.Optional;
+
+public interface StudentService {
+    int getAudioFileCountByStudentEmail(String email);
+
+    List<Audio> getAudioFilesByStudentEmail(String email);
 }
