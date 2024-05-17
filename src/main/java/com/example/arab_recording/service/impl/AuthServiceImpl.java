@@ -52,8 +52,9 @@ public class AuthServiceImpl implements AuthService {
         user.setActivationtoken(activationtoken);
 
         Student student=new Student();
-        student.setNickName(userRegisterRequest.getFirstName());
+        student.setNickName(userRegisterRequest.getNickName());
         student.setAge(userRegisterRequest.getAge());
+        student.setGender(userRegisterRequest.getGender());
         student.setUser(user);
         user.setStudent(student);
         userRepository.save(user);
