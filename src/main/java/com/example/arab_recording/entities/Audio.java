@@ -16,8 +16,13 @@ public class Audio {
     @Column(name = "name")
     private String name;
 
+    private String url;
+
     @Lob
     private byte[] bytes;
 
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 }

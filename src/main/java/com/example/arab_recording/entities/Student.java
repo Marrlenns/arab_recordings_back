@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Setter
@@ -25,4 +27,7 @@ public class Student {
 
     @OneToOne(mappedBy = "student")
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Audio> audios;
 }

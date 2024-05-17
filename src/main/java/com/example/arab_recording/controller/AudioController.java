@@ -17,8 +17,10 @@ import java.util.Optional;
 @RequestMapping("/audio")
 @AllArgsConstructor
 public class AudioController {
+
     private final AudioService audioService;
     private static final Logger logger = Logger.getLogger(AudioController.class.getName());
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadAudioFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -28,6 +30,7 @@ public class AudioController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadAudioFile(@PathVariable Long id) {
         Optional<Audio> audioFileOptional = audioService.getAudioFile(id);

@@ -1,5 +1,6 @@
 package com.example.arab_recording.dto;
 
+import com.example.arab_recording.enums.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,8 +9,8 @@ import lombok.Setter;
 public class UserRegisterRequest {
 
     private String email;
-    private String firstName;
-    private String lastName;
+    private String nickName;
     private String password;
     private Integer age;
+    private Gender gender;
 }
