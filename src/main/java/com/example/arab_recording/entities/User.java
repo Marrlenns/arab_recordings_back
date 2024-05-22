@@ -1,6 +1,5 @@
 package com.example.arab_recording.entities;
 
-import com.example.arab_recording.enums.Gender;
 import com.example.arab_recording.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;

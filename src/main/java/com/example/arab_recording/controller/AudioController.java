@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 import java.util.logging.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -22,11 +24,11 @@ public class AudioController {
     private static final Logger logger = Logger.getLogger(AudioController.class.getName());
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadAudioFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadAudioFile(@RequestParam("file") MultipartFile file,@RequestParam("email") String email) {
         try {
-            audioService.saveAudioFile(file);
+            audioService.saveAudioFile(file,email);
             return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -45,6 +47,7 @@ public class AudioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 //@GetMapping("/download/{id}")
 //public ResponseEntity<?> downloadAudioFile(@PathVariable Long id) {
 //    Optional<Audio> audioFileOptional = audioService.getAudioFile(id);

@@ -143,7 +143,8 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("user not found");
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authLoginRequest.getEmail(),authLoginRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authLoginRequest
+                    .getEmail(),authLoginRequest.getPassword()));
 
         }catch (org.springframework.security.authentication.BadCredentialsException e){
             throw new BadCredentialsException("user not found");
