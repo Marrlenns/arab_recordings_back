@@ -12,9 +12,10 @@ import com.example.arab_recording.repositories.WordRepository;
 import com.example.arab_recording.service.AudioService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ public class AudioServiceImpl implements AudioService {
     private final StudentRepository studentRepository;
     private final AmazonS3 amazonS3;
     private final WordRepository wordRepository;
+    private final JavaMailSender mailSender;
 
     private final String bucketName = "your-bucket-name";
 
@@ -55,6 +57,45 @@ public class AudioServiceImpl implements AudioService {
             }
             else {
                 throw new NotFoundException("Word is not found", HttpStatus.NOT_FOUND);
+            }
+
+            if(studentOptional.get().getAudios().size()==100){
+                SimpleMailMessage message=new SimpleMailMessage();
+
+                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+                message.setTo(email);
+                message.setSubject("Your account");
+                message.setText("We congratulate you with 100 words recorded");
+
+                mailSender.send(message);
+            }else if(studentOptional.get().getAudios().size()==200){
+                SimpleMailMessage message=new SimpleMailMessage();
+
+                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+                message.setTo(email);
+                message.setSubject("Your account");
+                message.setText("We congratulate you with 200 words recorded");
+
+                mailSender.send(message);
+            }else if(studentOptional.get().getAudios().size()==500){
+                SimpleMailMessage message=new SimpleMailMessage();
+
+                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+                message.setTo(email);
+                message.setSubject("Your account");
+                message.setText("We congratulate you with 500 words recorded");
+
+                mailSender.send(message);
+            }
+            else if(studentOptional.get().getAudios().size()==1000){
+                SimpleMailMessage message=new SimpleMailMessage();
+
+                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+                message.setTo(email);
+                message.setSubject("Your account");
+                message.setText("We congratulate you with 1000 words recorded");
+
+                mailSender.send(message);
             }
 
             return audioRepository.save(audioFile);
