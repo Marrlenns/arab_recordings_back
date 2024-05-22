@@ -23,10 +23,10 @@ public class AudioController {
     private final AudioService audioService;
     private static final Logger logger = Logger.getLogger(AudioController.class.getName());
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadAudioFile(@RequestParam("file") MultipartFile file,@RequestParam("email") String email) {
+    @PostMapping("/upload/{wordId}")
+    public ResponseEntity<String> uploadAudioFile(@RequestParam("file") MultipartFile file,@RequestParam("email") String email, @PathVariable Long wordId) {
         try {
-            audioService.saveAudioFile(file,email);
+            audioService.saveAudioFile(file,email, wordId);
             return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
         } catch (IOException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -17,4 +17,5 @@ public class Word {
 
     private String word;
     private Level level;
+    private Integer counter;
 }

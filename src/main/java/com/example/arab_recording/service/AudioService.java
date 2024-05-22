@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AudioService {
-    Audio saveAudioFile(MultipartFile file, String email) throws IOException;
+    Audio saveAudioFile(MultipartFile file, String email, Long wordId) throws IOException;
 
     Optional<Audio> getAudioFile(Long id);
 }
