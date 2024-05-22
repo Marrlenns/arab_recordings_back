@@ -59,49 +59,54 @@ public class AudioServiceImpl implements AudioService {
                 throw new NotFoundException("Word is not found", HttpStatus.NOT_FOUND);
             }
 
-            if(studentOptional.get().getAudios().size()==100){
-                SimpleMailMessage message=new SimpleMailMessage();
-
-                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
-                message.setTo(email);
-                message.setSubject("Your account");
-                message.setText("We congratulate you with 100 words recorded");
-
-                mailSender.send(message);
-            }else if(studentOptional.get().getAudios().size()==200){
-                SimpleMailMessage message=new SimpleMailMessage();
-
-                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
-                message.setTo(email);
-                message.setSubject("Your account");
-                message.setText("We congratulate you with 200 words recorded");
-
-                mailSender.send(message);
-            }else if(studentOptional.get().getAudios().size()==500){
-                SimpleMailMessage message=new SimpleMailMessage();
-
-                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
-                message.setTo(email);
-                message.setSubject("Your account");
-                message.setText("We congratulate you with 500 words recorded");
-
-                mailSender.send(message);
-            }
-            else if(studentOptional.get().getAudios().size()==1000){
-                SimpleMailMessage message=new SimpleMailMessage();
-
-                message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
-                message.setTo(email);
-                message.setSubject("Your account");
-                message.setText("We congratulate you with 1000 words recorded");
-
-                mailSender.send(message);
-            }
-
+            sendEmail(studentOptional,email);
             return audioRepository.save(audioFile);
+
         } else {
             throw new IllegalArgumentException("Student not found");
         }
+    }
+
+    public void sendEmail(Optional<Student>student,String email){
+        Optional<Student> studentOptional = studentRepository.findByUserEmail(email);
+        if(studentOptional.get().getAudios().size()==100){
+            SimpleMailMessage message=new SimpleMailMessage();
+
+            message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+            message.setTo(email);
+            message.setSubject("Your account");
+            message.setText("We congratulate you with 100 words recorded");
+
+            mailSender.send(message);
+        }else if(studentOptional.get().getAudios().size()==200){
+            SimpleMailMessage message=new SimpleMailMessage();
+
+            message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+            message.setTo(email);
+            message.setSubject("Your account");
+            message.setText("We congratulate you with 200 words recorded");
+
+            mailSender.send(message);
+        }else if(studentOptional.get().getAudios().size()==500){
+            SimpleMailMessage message=new SimpleMailMessage();
+
+            message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+            message.setTo(email);
+            message.setSubject("Your account");
+            message.setText("We congratulate you with 500 words recorded");
+
+            mailSender.send(message);
+        }
+        else if(studentOptional.get().getAudios().size()==1000){
+            SimpleMailMessage message=new SimpleMailMessage();
+
+            message.setFrom("aslan.tabaldiev@alatoo.edu.kg");
+            message.setTo(email);
+            message.setSubject("Your account");
+            message.setText("We congratulate you with 1000 words recorded");
+
+            mailSender.send(message);
+        }else{}
     }
 
     @Override
