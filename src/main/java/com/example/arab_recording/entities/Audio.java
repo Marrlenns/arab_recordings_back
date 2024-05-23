@@ -25,4 +25,7 @@ public class Audio {
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
+
+    @ManyToOne
+    private Word word;
 }
