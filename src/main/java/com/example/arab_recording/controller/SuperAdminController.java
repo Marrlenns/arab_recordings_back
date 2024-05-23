@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -34,5 +35,10 @@ public class SuperAdminController {
     @PostMapping("/add_word")
     public void addword(@RequestBody WordRequest wordRequest) {
         superAdminService.addword(wordRequest);
+    }
+
+    @GetMapping("/statistic")
+    public List<String> getStatistic(){
+        return superAdminService.getStatistic();
     }
 }

@@ -5,6 +5,8 @@ import com.example.arab_recording.entities.User;
 import com.example.arab_recording.entities.Word;
 import com.example.arab_recording.enums.Level;
 import com.example.arab_recording.enums.Role;
+import com.example.arab_recording.repositories.AdminRepository;
+import com.example.arab_recording.repositories.ExpertRepository;
 import com.example.arab_recording.repositories.UserRepository;
 import com.example.arab_recording.repositories.WordRepository;
 import com.example.arab_recording.service.SuperAdminService;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -28,6 +32,8 @@ public class SuperAdminServiceImpl implements SuperAdminService {
     private final WordRepository wordRepository;
     private final PasswordEncoder encoder;
     private final JavaMailSender mailSender;
+    private final ExpertRepository expertRepository;
+    private final AdminRepository adminRepository;
 
     public String generateActivationToken() {
         return UUID.randomUUID().toString();
@@ -109,5 +115,22 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public List<String> getStatistic() {
+        List<String>info=new ArrayList<>();
+        info.add(String.valueOf(wordRepository.count()));
+
+        info.add("Easy lvl: " + wordRepository.countByLevel(Level.EASY));
+        info.add("Medium lvl: " + wordRepository.countByLevel(Level.MEDIUM));
+        info.add("Hard lvl: " + wordRepository.countByLevel(Level.HARD));
+
+        info.add(String.valueOf(userRepository.count()));
+        info.add(String.valueOf(expertRepository.count()));
+        info.add(String.valueOf(adminRepository.count()));
+
+
+        return info;
     }
 }
