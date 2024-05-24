@@ -15,6 +15,8 @@ public class Word {
     private Long id;
 
     private String word;
+    private String translation;
+    private String transcription;
     private Level level;
     private Integer counter;
 
