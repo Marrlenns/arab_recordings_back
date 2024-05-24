@@ -55,6 +55,8 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
             word.setWord(wordRequest.getWord());
             word.setLevel(Level.valueOf(wordRequest.getLevel()));
+            word.setTranslation(wordRequest.getTranslation());
+            word.setTranscription(wordRequest.getTranscription());
 
             wordRepository.save(word);
         }

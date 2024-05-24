@@ -8,5 +8,7 @@ import lombok.Setter;
 public class WordRequest {
 
     private String word;
+    private String translation;
+    private String transcription;
     private String level;
 }
