@@ -1,20 +1,25 @@
 package com.example.arab_recording.controller;
 
 import com.example.arab_recording.dto.PronunciationCheckRequest;
+import com.example.arab_recording.dto.ReportPronunciationRequest;
+import com.example.arab_recording.dto.SettingsRequest;
+import com.example.arab_recording.entities.ExpertSettings;
 import com.example.arab_recording.enums.Correctness;
 import com.example.arab_recording.service.ExpertService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/expert")
 public class ExpertController {
-private final ExpertService expertService;
+    private final ExpertService expertService;
+
+    @GetMapping("/{id}")
+
 
 
     @PostMapping("/checkPronunciation")
@@ -22,7 +27,8 @@ private final ExpertService expertService;
         Long recordedWordId = request.getRecordedWordId();
         Correctness correctnessLevel = request.getCorrectnessLevel();
 
-        boolean assessmentSuccessful = ExpertService.assessPronunciation(recordedWordId, correctnessLevel);
+        Correctness correctness  = expertService.assessPronunciation(recordedWordId, correctnessLevel);
+        boolean assessmentSuccessful = expertService.assessWord(recordedWordId);
 
         if (assessmentSuccessful) {
             return ResponseEntity.ok("Pronunciation assessment completed successfully.");
@@ -31,6 +37,26 @@ private final ExpertService expertService;
         }
     }
 
+    @DeleteMapping("/deleteRecordedWord/{recordedWordId}")
+    public void deleteRecordedWord(@PathVariable Long recordedWordId) {
+        expertService.deleteRecordedWord(recordedWordId);
+
+
+
+    }
+    @PostMapping("/report")
+    public void reportPronunciation(@RequestBody ReportPronunciationRequest request ) {
+        expertService.reportPronunciation(request);
+
+    }
+    @GetMapping("/settings")
+    public ExpertSettings getExpertSettings() {
+        return expertService.getExpertSettings();
+    }
+    @PutMapping("/update")
+    public void updateExpertSettings(@RequestBody SettingsRequest request) {
+        expertService.updateExpertSettings(request);
+    }
 
 }
 

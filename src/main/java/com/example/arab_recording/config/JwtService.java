@@ -23,9 +23,9 @@ public class JwtService {
   private long refreshExpiration;
 
   public String generateToken(
-      Map<String, Object> extraClaims,
-      UserDetails userDetails
-  ) {
+          Map<String, Object> extraClaims,
+          UserDetails userDetails
+  ){
     return buildToken(extraClaims, userDetails, jwtExpiration);
   }
 

@@ -5,11 +5,8 @@ import com.example.arab_recording.dto.AuthLoginResponse;
 import com.example.arab_recording.dto.NewPasswordRequest;
 import com.example.arab_recording.dto.UserRegisterRequest;
 import com.example.arab_recording.service.AuthService;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.Struct;
 import org.springframework.web.bind.annotation.*;
-import com.example.arab_recording.service.AuthService;
 
 @RestController
 @AllArgsConstructor

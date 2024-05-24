@@ -1,6 +1,5 @@
 package com.example.arab_recording.enums;
 
-public enum Level {
-
-    EASY, MEDIUM, HARD
+public enum Gender {
+    MALE, FEMALE, OTHER
 }

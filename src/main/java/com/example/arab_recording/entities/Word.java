@@ -1,11 +1,10 @@
 package com.example.arab_recording.entities;
 
 import com.example.arab_recording.enums.Level;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -17,4 +16,8 @@ public class Word {
 
     private String word;
     private Level level;
+    private Integer counter;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Audio> word_audios;
 }

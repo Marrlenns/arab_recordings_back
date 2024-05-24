@@ -1,10 +1,12 @@
 package com.example.arab_recording.entities;
 
+import com.example.arab_recording.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+
 
 @Entity
 @Setter
@@ -15,13 +17,16 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String firstName;
-    private String LastName;
-    private int age;
+    private String nickName;
+    private Integer age;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    private int wordsCount;
-    private int monthRecord;
+    private Integer monthRecord;
 
     @OneToOne(mappedBy = "student")
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Audio> audios;
 }

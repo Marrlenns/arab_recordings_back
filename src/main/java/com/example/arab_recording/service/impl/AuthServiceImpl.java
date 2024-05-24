@@ -19,17 +19,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -56,10 +50,11 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(Role.STUDENT);
         user.setPassword(encoder.encode(userRegisterRequest.getPassword()));
         user.setActivationtoken(activationtoken);
+
         Student student=new Student();
-        student.setFirstName(userRegisterRequest.getFirstName());
-        student.setLastName(userRegisterRequest.getLastName());
+        student.setNickName(userRegisterRequest.getNickName());
         student.setAge(userRegisterRequest.getAge());
+        student.setGender(userRegisterRequest.getGender());
         student.setUser(user);
         user.setStudent(student);
         userRepository.save(user);
@@ -85,23 +80,6 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(user);
         }
-    }
-
-    @Override
-    public AuthLoginResponse login(AuthLoginRequest authLoginRequest) {
-        Optional<User> user = userRepository.findByEmail(authLoginRequest.getEmail());
-        if (user.isEmpty())
-            throw new BadCredentialsException("user not found");
-
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authLoginRequest.getEmail(),authLoginRequest.getPassword()));
-
-        }catch (org.springframework.security.authentication.BadCredentialsException e){
-            throw new BadCredentialsException("user not found");
-        }
-
-
-        return convertToResponse(user);
     }
 
     @Override
@@ -159,17 +137,41 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public AuthLoginResponse login(AuthLoginRequest authLoginRequest) {
+        Optional<User> user = userRepository.findByEmail(authLoginRequest.getEmail());
+        if (user.isEmpty())
+            throw new BadCredentialsException("user not found");
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authLoginRequest
+                    .getEmail(),authLoginRequest.getPassword()));
+
+        }catch (org.springframework.security.authentication.BadCredentialsException e){
+            throw new BadCredentialsException("user not found");
+        }
+
+
+        return convertToResponse(user);
+    }
+
     public AuthLoginResponse convertToResponse(Optional<User> user) {
         AuthLoginResponse authLoginResponse = new AuthLoginResponse();
         authLoginResponse.setEmail(user.get().getEmail());
         authLoginResponse.setId(user.get().getId());
-        if (user.get().getRole().equals(Role.STUDENT)) {
-            authLoginResponse.setFirstName(user.get().getStudent().getFirstName());
-            authLoginResponse.setLastName(user.get().getStudent().getLastName());
-        }
-        Map<String, Object> extraClaims = new HashMap<>();
 
-        String token = jwtService.generateToken(extraClaims, (UserDetails) user.get());
+        if (user.get().getRole().equals(Role.STUDENT)) {
+            authLoginResponse.setNickName(user.get().getStudent().getNickName());
+        }
+        else if(user.get().getRole().equals(Role.EXPERT)){
+            authLoginResponse.setNickName(user.get().getExpert().getNickName());
+        }
+        else{
+            authLoginResponse.setNickName(user.get().getAdmin().getNickName());
+        }
+      
+        Map<String, Object> extraClaims = new HashMap<>();
+        String token = jwtService.generateToken(extraClaims, user.get());
+        authLoginResponse.setToken(token);
 
         return authLoginResponse;
     }
